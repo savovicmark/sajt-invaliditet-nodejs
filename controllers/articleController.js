@@ -65,3 +65,19 @@ exports.updateArticleById = async (req, res) => {
         })
     }
 }
+
+//======================================================================================
+
+exports.deleteArticleById = async (req, res) => {
+    const id = req.params.articleId;
+    try {
+        const article = await ArticleModel.findByIdAndDelete(id);
+        res.status(200).json(article);
+    }
+    catch(err) {
+        res.status(400).json({
+            msg: "Delete article failed",
+            err: err
+        })
+    }
+}

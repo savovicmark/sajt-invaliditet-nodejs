@@ -11,4 +11,5 @@ router
 router
     .route('/:articleId')
     .get(articleController.getArticleById)
+    .delete(articleController.deleteArticleById)
 module.exports = router;

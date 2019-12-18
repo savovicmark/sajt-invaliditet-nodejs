@@ -11,11 +11,13 @@ exports.postUser = async (req, res) => {
             res.status(400).json({
                 msg: "Korisnicko ime vec postoji"
             })
+        } else {
+            hashPass = await bcrypt.hash(password, 10);
+            const newUser = new UserModel({username, email, password: hashPass});
+            const savedUser = await newUser.save();
+            res.status(200).json(savedUser);
         }
-        hashPass = await bcrypt.hash(password, 10);
-        const newUser = new UserModel({username, email, password: hashPass});
-        const savedUser = await newUser.save();
-        res.status(200).json(savedUser);
+        
     } 
     catch(err) {
         res.status(400).json({

@@ -63,3 +63,37 @@ exports.postReplyToComment = async (req, res) => {
 }
 
 //=================================================================================================
+
+exports.deleteComment = async (req, res) => {
+    const commentId = req.params.commentId;
+    // console.log(commentId);
+    try {
+        const comment = await CommentModel.findByIdAndDelete(commentId);
+        res.status(200).json(comment)
+    }
+    catch(err) {
+        res.status(400).json({
+            msg: "Deleting comment failed",
+            err: err
+        })
+    }
+}
+
+//================================================================================================
+
+exports.deleteReply = async (req, res) => {
+    const replyId = req.params.replyId;
+    const commentId = req.params.commentId;
+    try {
+        const comment = await CommentModel.findById(commentId);
+        comment.replies.id(replyId).remove();
+        const savedComment = await comment.save();
+        res.status(200).json(savedComment);
+    }
+    catch(err) {
+        res.status(400).json({
+            msg: "Deleting reply failed",
+            err: err
+        })
+    }
+}
