@@ -5,7 +5,16 @@ exports.postComment = async (req, res) => {
     try {
         const newComment = new CommentModel({text, "user": req.body.userId, "article": req.body.articleId});
         const savedComment = await newComment.save();
-        res.status(200).json(savedComment);
+        //=================================
+        const populateComm = await CommentModel.findById(savedComment._id).populate({
+            path: 'user',
+            select: 'username _id' 
+        }).populate({
+            path: 'replies.user',
+            model: 'User',
+            select: 'username _id'
+        });
+        res.status(200).json(populateComm);
     }
    catch(err) {
        res.status(400).json({
@@ -18,6 +27,7 @@ exports.postComment = async (req, res) => {
 
 exports.getCommentsByArticleId = async (req, res) => {
     const articleId = req.params.articleId;
+    console.log(articleId);
     try {
         const comments = await CommentModel.find({"article": articleId}).populate({
             path: 'user',

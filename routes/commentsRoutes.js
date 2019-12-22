@@ -3,6 +3,9 @@ const router = express.Router();
 const commentController = require('../controllers/commentsController');
 
 router
+    .route('/getcomments/:articleId')
+    .get(commentController.getCommentsByArticleId)
+router
     .route('/reply')
     .post(commentController.postReplyToComment)
 
@@ -13,9 +16,7 @@ router
 router
     .route('/comment/:commentId')
     .delete(commentController.deleteComment)
-router
-    .route('/:articleId')
-    .get(commentController.getCommentsByArticleId)
+
 router
     .route('/')
     .post(commentController.postComment)
