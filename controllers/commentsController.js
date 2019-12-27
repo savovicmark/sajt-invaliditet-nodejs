@@ -62,7 +62,16 @@ exports.postReplyToComment = async (req, res) => {
                 }
             }
         }, {new: true});
-        res.status(200).json(updatedComm)
+        //====novo
+        const comment = await CommentModel.findById(commentId).populate({
+            path: 'user',
+            select: 'username _id' 
+        }).populate({
+            path: 'replies.user',
+            model: 'User',
+            select: 'username _id'
+        });
+        res.status(200).json(comment);
     }
     catch(err) {
         res.status(400).json({
